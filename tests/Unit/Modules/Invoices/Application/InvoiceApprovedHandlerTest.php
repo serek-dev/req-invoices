@@ -6,8 +6,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Modules\Invoices\Application;
 
 
+use App\Domain\Events\InvoiceApprovedInterface;
 use App\Modules\Invoices\Application\InvoiceApprovedHandler;
+use App\Modules\Invoices\Domain\InvoiceNotFound;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 
 /** @covers \App\Modules\Invoices\Application\InvoiceApprovedHandler */
 final class InvoiceApprovedHandlerTest extends TestCase
@@ -21,10 +24,15 @@ final class InvoiceApprovedHandlerTest extends TestCase
     public function testHandleNonExistingInvoiceThrowsError(): void
     {
         // Given I have an event with non-existing uuid
+        $event = $this->createMock(InvoiceApprovedInterface::class);
+        $event->method('getId')->willReturn(Uuid::uuid4());
 
         // Then I should see an error
+        $this->expectException(InvoiceNotFound::class);
 
         // When I handle it
+        $sut = new InvoiceApprovedHandler();
+        $sut->handle($event);
     }
 
     public function testHandleOnInvalidStatusThrowsError(): void
