@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Modules\Invoices\Application;
 
 
+use App\Domain\Enums\StatusEnum;
 use App\Domain\Events\InvoiceApprovedInterface;
 use App\Modules\Invoices\Application\InvoiceApprovedHandler;
 use App\Modules\Invoices\Domain\Invoice;
@@ -49,7 +50,7 @@ final class InvoiceApprovedHandlerTest extends TestCase
         $event->method('getId')->willReturn(Uuid::uuid4());
 
         // But it's not draft status
-        $invoice = new Invoice();
+        $invoice = new Invoice(StatusEnum::REJECTED);
         $repository = $this->createMock(InvoiceRepositoryInterface::class);
         $repository->method('findOne')
             ->willReturn($invoice);
@@ -65,11 +66,22 @@ final class InvoiceApprovedHandlerTest extends TestCase
     public function testHandle(): void
     {
         // Given I have an existing event
+        $id = Uuid::uuid4();
+        $event = $this->createMock(InvoiceApprovedInterface::class);
+        $event->method('getId')->willReturn($id);
 
         // And it is in draft status
+        $invoice = new Invoice(StatusEnum::DRAFT);
+        $repository = $this->createMock(InvoiceRepositoryInterface::class);
+        $repository->method('findOne')
+            ->willReturn($invoice);
 
         // Then it should be persisted correctly
+        $repository->expects($this->once())
+            ->method('store');
 
         // When I handle it
+        $sut = new InvoiceApprovedHandler($repository);
+        $sut->handle($event);
     }
 }

@@ -10,4 +10,6 @@ use Ramsey\Uuid\UuidInterface;
 interface InvoiceRepositoryInterface
 {
     public function findOne(UuidInterface $uuid): ?Invoice;
+
+    public function store(Invoice $invoice): void;
 }
