@@ -7,12 +7,23 @@ namespace App\Modules\Invoices\Application;
 
 
 use App\Domain\Events\InvoiceApprovedInterface;
+use App\Modules\Invoices\Domain\InvoiceBadState;
 use App\Modules\Invoices\Domain\InvoiceNotFound;
+use App\Modules\Invoices\Domain\InvoiceRepositoryInterface;
 
 final class InvoiceApprovedHandler
 {
+    public function __construct(private readonly InvoiceRepositoryInterface $invoiceRepository)
+    {
+    }
+
     public function handle(InvoiceApprovedInterface $e): void
     {
-        throw new InvoiceNotFound();
+        $invoice = $this->invoiceRepository->findOne($e->getId());
+        if (!$invoice) {
+            throw new InvoiceNotFound();
+        }
+
+        throw new InvoiceBadState('Invoice must be in draft status.');
     }
 }
