@@ -120,6 +120,9 @@ final class InvoiceModuleTest extends TestCase
         /** @var InvoiceFacadeInterface $facade */
         $facade = $app->get(InvoiceFacadeInterface::class);
 
-        $this->assertNotEmpty($facade->findInvoice(InvoiceSeeder::SECOND_DRAFT_INVOICE_ID)->jsonSerialize());
+        $this->assertNotEmpty($sut = $facade->findInvoice(InvoiceSeeder::SECOND_DRAFT_INVOICE_ID)->jsonSerialize());
+
+        // There is company data in
+        $this->assertArrayHasKey('company', $sut);
     }
 }
