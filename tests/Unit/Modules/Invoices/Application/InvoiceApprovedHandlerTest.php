@@ -50,7 +50,7 @@ final class InvoiceApprovedHandlerTest extends TestCase
         $event->method('getId')->willReturn(Uuid::uuid4());
 
         // But it's not draft status
-        $invoice = new Invoice(StatusEnum::REJECTED);
+        $invoice = Invoice::create(StatusEnum::REJECTED);
         $repository = $this->createMock(InvoiceRepositoryInterface::class);
         $repository->method('findOne')
             ->willReturn($invoice);
@@ -71,7 +71,7 @@ final class InvoiceApprovedHandlerTest extends TestCase
         $event->method('getId')->willReturn($id);
 
         // And it is in draft status
-        $invoice = new Invoice(StatusEnum::DRAFT);
+        $invoice = Invoice::create(StatusEnum::DRAFT);
         $repository = $this->createMock(InvoiceRepositoryInterface::class);
         $repository->method('findOne')
             ->willReturn($invoice);

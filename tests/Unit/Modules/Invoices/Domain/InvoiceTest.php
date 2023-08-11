@@ -16,21 +16,21 @@ final class InvoiceTest extends TestCase
 {
     public function testApproveFailsOnAlreadyApproved(): void
     {
-        $sut = new Invoice(status: StatusEnum::APPROVED);
+        $sut = Invoice::create(status: StatusEnum::APPROVED);
         $this->expectException(InvoiceBadState::class);
         $sut->approve();
     }
 
     public function testApproveFailsOnAlreadyRejected(): void
     {
-        $sut = new Invoice(status: StatusEnum::REJECTED);
+        $sut = Invoice::create(status: StatusEnum::REJECTED);
         $this->expectException(InvoiceBadState::class);
         $sut->approve();
     }
 
     public function testApprove(): void
     {
-        $sut = new Invoice(status: StatusEnum::DRAFT);
+        $sut = Invoice::create(status: StatusEnum::DRAFT);
         $sut->approve();
         // we don't need to expose status just for testing purposes
         $this->assertTrue(true);
