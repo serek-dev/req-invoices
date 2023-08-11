@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Approval\Infrastructure\Providers\ApprovalsRoutesServiceProvider;
+use App\Modules\Approval\Infrastructure\Providers\ApprovalsRoutesProvider;
 use App\Modules\Invoices\Infrastructure\Providers\InvoicesRoutesProvider;
 use Illuminate\Support\Facades\Facade;
 
@@ -203,7 +203,7 @@ return [
          * Modules Service Providers
          */
         App\Modules\Approval\Infrastructure\Providers\ApprovalsServiceProvider::class,
-        ApprovalsRoutesServiceProvider::class,
+        ApprovalsRoutesProvider::class,
         App\Modules\Invoices\Infrastructure\Providers\InvoicesServiceProvider::class,
         InvoicesRoutesProvider::class,
     ],

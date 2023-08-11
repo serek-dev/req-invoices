@@ -9,7 +9,7 @@ use App\Modules\Approval\Api\Http\RejectionController;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
 
-class ApprovalsRoutesServiceProvider extends RouteServiceProvider
+class ApprovalsRoutesProvider extends RouteServiceProvider
 {
     public function boot(): void
     {

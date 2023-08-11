@@ -13,7 +13,7 @@ use App\Modules\Invoices\Application\InvoiceRejectedHandler;
 use App\Modules\Invoices\Application\ReadInvoiceQuery;
 use App\Modules\Invoices\Domain\InvoiceRepositoryInterface;
 use App\Modules\Invoices\Infrastructure\Database\Repository\EloquentRepository;
-use App\Modules\Invoices\Infrastructure\View\EloquentInvoiceQuery;
+use App\Modules\Invoices\Infrastructure\Read\EloquentInvoiceQuery;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 

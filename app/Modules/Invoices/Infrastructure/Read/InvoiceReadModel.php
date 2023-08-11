@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Invoices\Infrastructure\View;
+namespace App\Modules\Invoices\Infrastructure\Read;
 
 use Illuminate\Database\Eloquent\Model;
 
