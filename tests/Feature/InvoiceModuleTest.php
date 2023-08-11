@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Domain\Enums\StatusEnum;
 use App\Domain\Events\InvoiceApprovedInterface;
 use App\Modules\Invoices\Domain\Invoice;
+use App\Modules\Invoices\Domain\InvoiceBadState;
 use App\Modules\Invoices\Infrastructure\Database\Seeders\InvoiceSeeder;
 use Illuminate\Contracts\Events\Dispatcher;
 use Ramsey\Uuid\Uuid;
@@ -20,20 +21,37 @@ final class InvoiceModuleTest extends TestCase
 
     public function testApproveExistingInvoiceDraft(): void
     {
-        $app = $this->createApplication();
-
         // Given I have an event from the external thing
         // with UUID of an existing invoice in draft status
         $event = $this->getEvent();
 
         // When I execute my app
-        $app->make(Dispatcher::class)->dispatch($event);
+        $this->dispatch($event);
 
         // Then invoice should be approved
         /** @var ?Invoice $actual */
         $actual = Invoice::where('id', $event->getId())->first();
         $this->assertNotEmpty($actual);
         $this->assertEquals(StatusEnum::APPROVED, $actual->getStatus());
+    }
+
+    /** @depends testApproveExistingInvoiceDraft */
+    public function testApproveFailsOnAlreadyApproved(): void
+    {
+        // Given I have an event for already approved invoice
+        $event = $this->getEvent();
+
+        // Then I should see an error
+        $this->expectException(InvoiceBadState::class);
+
+        // When trying to change status
+        $this->dispatch($event);
+    }
+
+    private function dispatch(object $event): void
+    {
+        $app = $this->createApplication();
+        $app->make(Dispatcher::class)->dispatch($event);
     }
 
     private function getEvent(): InvoiceApprovedInterface
