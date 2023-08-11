@@ -75,10 +75,15 @@ Unit tests in plus.
 
 ## Approval module
 
+```bash
+./start.sh
+```
+
 Start the project, db should be seeded, and the first two invoices should be in draft status.
 It should be possible to use these two endpoints in order to approve or reject it.
 
-I've divided all this logic into two paths.
+I've divided all this logic into two paths. Shape of existing DTO was a little bit not clear to me
+so I have adjusted it to my assumptions.
 
 ```bash
 curl -X PATCH http://localhost/api/approvals/0e62f10d-a668-46ed-9520-5393d5094889/approve -H 'Content-Type: application/json' -H 'Accept: application/json'
@@ -121,4 +126,27 @@ where id in ('0e62f10d-a668-46ed-9520-5393d5094889', '1594d999-28ad-4699-9b28-42
 ```text
 0e62f10d-a668-46ed-9520-5393d5094889 | approved
 1594d999-28ad-4699-9b28-4236ea48aa1f | rejected
+```
+
+## Show an invoice
+
+I've decided do split write / read logic. Most of the cases it's a good idea, especially in the DDD approach, so we can
+keep
+domain entities thin and focused on domain logic. Projection can be whatever or a
+combination of whatever (sql + hardcoded data etc).
+
+```bash
+curl -X GET http://localhost/api/invoices/1594d999-28ad-4699-9b28-4236ea48aa1f -H 'Content-Type: application/json' -H 'Accept: application/json'
+```
+
+Basic validation added as well.
+
+## Optional
+
+I also added unit tests and feature tests at the level of InvoiceFacade to test real integrations works, run on
+started project:
+
+```bash
+docker compose exec workspace composer tests:unit
+docker compose exec workspace composer tests:feature
 ```

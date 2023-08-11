@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Domain\Enums\StatusEnum;
 use App\Domain\Events\InvoiceApprovedInterface;
 use App\Domain\Events\InvoiceRejectedInterface;
+use App\Modules\Invoices\Api\InvoiceFacadeInterface;
 use App\Modules\Invoices\Domain\Invoice;
 use App\Modules\Invoices\Domain\InvoiceBadState;
 use App\Modules\Invoices\Infrastructure\Database\Seeders\InvoiceSeeder;
@@ -110,5 +111,15 @@ final class InvoiceModuleTest extends TestCase
                 return Uuid::fromString($this->uuid);
             }
         };
+    }
+
+    public function testShowInvoice(): void
+    {
+        $app = $this->createApplication();
+
+        /** @var InvoiceFacadeInterface $facade */
+        $facade = $app->get(InvoiceFacadeInterface::class);
+
+        $this->assertNotEmpty($facade->findInvoice(InvoiceSeeder::SECOND_DRAFT_INVOICE_ID)->jsonSerialize());
     }
 }
