@@ -70,3 +70,55 @@ Unit tests in plus.
   ```
   docker compose exec workspace bash
   ``` 
+
+# Solution
+
+## Approval module
+
+Start the project, db should be seeded, and the first two invoices should be in draft status.
+It should be possible to use these two endpoints in order to approve or reject it.
+
+I've divided all this logic into two paths.
+
+```bash
+curl -X PATCH http://localhost/api/approvals/0e62f10d-a668-46ed-9520-5393d5094889/approve -H 'Content-Type: application/json' -H 'Accept: application/json'
+```
+
+## Rejection
+
+```bash
+curl -X PATCH http://localhost/api/approvals/1594d999-28ad-4699-9b28-4236ea48aa1f/reject -H 'Content-Type: application/json' -H 'Accept: application/json'
+```
+
+Request is validating that provided route {id} exists, if not, the following response blows up the mind:
+
+```bash
+curl -X PATCH http://localhost/api/approvals/i-am-not-even-uuid/reject -H 'Content-Type: application/json' -H 'Accept: application/json'
+```
+
+```json
+{
+  "message": "The selected id is invalid.",
+  "errors": {
+    "id": [
+      "The selected id is invalid."
+    ]
+  }
+}
+```
+
+On consecutive calls with existing uuids (non-draft), ugly error will be thrown, normally I'd to handle it at
+global handling scope.
+
+Once everything is fine, invoices should change statuses correspondingly:
+
+```mysql
+select id, status
+from invoices
+where id in ('0e62f10d-a668-46ed-9520-5393d5094889', '1594d999-28ad-4699-9b28-4236ea48aa1f');
+```
+
+```text
+0e62f10d-a668-46ed-9520-5393d5094889 | approved
+1594d999-28ad-4699-9b28-4236ea48aa1f | rejected
+```
