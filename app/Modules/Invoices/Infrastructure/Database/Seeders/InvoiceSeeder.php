@@ -13,6 +13,8 @@ use Ramsey\Uuid\Uuid;
 
 class InvoiceSeeder extends Seeder
 {
+    public const FIRST_DRAFT_INVOICE_ID = '1594d999-28ad-4699-9b28-4236ea48aa1f';
+
     public function __construct(
         private ConnectionInterface $db
     ) {
@@ -29,12 +31,12 @@ class InvoiceSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             $invoices[] = [
-                'id' => Uuid::uuid4()->toString(),
+                'id' => 0 === $i ? self::FIRST_DRAFT_INVOICE_ID : Uuid::uuid4()->toString(),
                 'number' => $faker->uuid(),
                 'date' => $faker->date(),
                 'due_date' => $faker->date(),
                 'company_id' => $companies->random()->id,
-                'status' => StatusEnum::cases()[array_rand(StatusEnum::cases())],
+                'status' => 0 === $i ? StatusEnum::DRAFT : StatusEnum::cases()[array_rand(StatusEnum::cases())],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

@@ -48,7 +48,14 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
-        "tests": "./vendor/bin/phpunit"
+        "tests": "./vendor/bin/phpunit --testdox --colors",
+        "tests:unit": "@tests --testsuite Unit",
+        "tests:feature": [
+            "php artisan db:wipe --quiet",
+            "php artisan migrate:refresh --quiet",
+            "php artisan db:seed --quiet --class=\\\\App\\\\Modules\\\\Invoices\\\\Infrastructure\\\\Database\\\\Seeders\\\\DatabaseSeeder",
+            "@tests --testsuite Feature"
+        ]
     },
     "extra": {
         "laravel": {
