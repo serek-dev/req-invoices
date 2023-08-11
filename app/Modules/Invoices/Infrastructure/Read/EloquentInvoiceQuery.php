@@ -14,7 +14,7 @@ final class EloquentInvoiceQuery implements ReadInvoiceQuery
     public function find(string $id): JsonSerializable
     {
         return InvoiceReadModel::where('id', $id)
-            ->with('company')
+            ->with('company', 'products')
             ->firstOrFail();
     }
 }

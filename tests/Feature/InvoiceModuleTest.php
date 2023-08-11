@@ -124,5 +124,8 @@ final class InvoiceModuleTest extends TestCase
 
         // There is company data in
         $this->assertArrayHasKey('company', $sut);
+
+        // There are product's data in
+        $this->assertArrayHasKey('products', $sut);
     }
 }
