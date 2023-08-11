@@ -15,6 +15,10 @@ final class InvoiceApprovedHandler
     {
     }
 
+    /**
+     * @throws InvoiceBadState
+     * @throws InvoiceNotFound
+     */
     public function handle(InvoiceApprovedInterface $e): void
     {
         $invoice = $this->invoiceRepository->findOne($e->getId());
