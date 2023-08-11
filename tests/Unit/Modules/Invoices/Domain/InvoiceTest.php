@@ -35,4 +35,26 @@ final class InvoiceTest extends TestCase
         // we don't need to expose status just for testing purposes
         $this->assertTrue(true);
     }
+
+    public function testRejectFailsOnAlreadyRejected(): void
+    {
+        $sut = Invoice::create(status: StatusEnum::REJECTED);
+        $this->expectException(InvoiceBadState::class);
+        $sut->reject();
+    }
+
+    public function testRejectFailsOnAlreadyApproved(): void
+    {
+        $sut = Invoice::create(status: StatusEnum::APPROVED);
+        $this->expectException(InvoiceBadState::class);
+        $sut->reject();
+    }
+
+    public function testReject(): void
+    {
+        $sut = Invoice::create(status: StatusEnum::DRAFT);
+        $sut->reject();
+        // we don't need to expose status just for testing purposes
+        $this->assertTrue(true);
+    }
 }
